@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@ViewBag.Title</title>
+    
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul li a {
+            text-decoration: none;
+        }
+
+        #nav-mobile li a {
+            text-decoration: none;
+        }
+
+        #nav-mobile li a:hover {
+                color: white;
+            }
+
+        .content {
+            min-height: calc(100vh - 170px);
+            /* 80px header + 40px footer = 120px  */
+        }
+
+        footer {
+            margin-top: 100px;
+            height: 300px;
+        }
+        
+    </style>
+</head>
+        <body> 
+            <div class="container-fluid body-content">
+                <header>
+                    <nav style="margin-top:-50px; box-shadow:0 0 10px rgba(0,0,0,0.5); height:70px;">
+                        <div class="nav-wrapper" style="background-color:#26a69a;">
+                            <a href="#" class="brand-logo center" style="text-decoration:none">LibraryFree</a>
+                            <ul id="nav-mobile" class="left hide-on-med-and-down">
+                                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                                <li>@Html.ActionLink("Books", "Index", "Books")</li>
+                                <li>@Html.ActionLink("Authors", "Index", "Authors")</li>
+                                <li>@Html.ActionLink("Genres", "Index", "Genres")</li>
+                            </ul>
+                        </div>
+                    </nav>
+                </header>
+                <div class="content">
+                    @RenderBody()
+                </div>
+                <footer class="page-footer"  style="background-color:#26A69A">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col l6 s12">
+                                <h5 class="white-text">FreeLibrary</h5>
+                                <p class="grey-text text-lighten-4">Feel free to read free</p>
+                            </div>
+                            <div class="col l4 offset-l2 s12">
+                                <h5 class="white-text">Follow us</h5>
+                                <ul>
+                                    <li><a class="grey-text text-lighten-3" href="#!">Isntagram</a></li>
+                                    <li><a class="grey-text text-lighten-3" href="#!">Telegram</a></li>
+                                    <li><a class="grey-text text-lighten-3" href="#!">Vk</a></li>
+                                    <li><a class="grey-text text-lighten-3" href="#!">Facebook</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer-copyright">
+                        <div class="container">
+                            © 2017 Copyright Text
+                            <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+                        </div>
+                    </div>
+                </footer>
+                </div>
+ 
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+            <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+            <link href="~/Content/themes/base/theme.css" rel="stylesheet" />
+            <script src="~/Scripts/angular.js"></script>
+            <script src="~/Scripts/main/dialog-service.js"></script>
+            <script src="~/Scripts/main/core.js"></script>
+            <script src="~/Scripts/main/rating.js"></script>
+            <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/trix/0.9.2/trix.css">
+            <script src="//cdnjs.cloudflare.com/ajax/libs/trix/0.9.2/trix.js"></script>
+            <script src="~/Scripts/main/angular-trix.js"></script>
+            <script src="~/Scripts/main/comments.js"></script>
+
+            @RenderSection("scripts", required: false)
+        </body>
+</html>

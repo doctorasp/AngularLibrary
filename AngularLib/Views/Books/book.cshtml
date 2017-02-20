@@ -1,0 +1,170 @@
+﻿@model LibraryAngular.Models.Book
+
+@{
+    ViewBag.Title = "book";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #commentBody {
+        background-color: #f4f8fc;
+        padding-bottom: 30px;
+
+    }
+    #commentBody p{
+        padding:30px;
+        font-size:18px;
+    }
+
+    #commentBodyLine {
+        background-color: white;
+        padding:20px;
+    }
+        #commentBodyLine text{
+            color:darkgrey;
+        }
+        
+         #commentBodyLine text:last-child {
+            text-align: center;
+            font-weight: 300;
+        }
+
+        #commentBodyLine text:first-child {
+            text-align: center;
+            font-weight: bold;
+            padding-right: 200px;
+        }
+        p{
+            padding-bottom:10px;
+        }
+        #similar td{
+            width:50px;
+            max-width:50px;
+        }
+    #commentForm {
+        width:100%;
+    }
+
+    #commentForm input, textarea, trix-editor {
+        width:100% !important;
+        min-width:100%;
+    }
+        #commentForm textarea, trix-editor {
+            height: 300px;
+        }
+        #commentForm #commentBtn{
+            text-align:right;
+        }
+    
+</style>
+
+<div ng-app="MyApp" ng-init="similarBooks('@Model.Genre.GenreName')" ng-controller="myCtrl" ng-cloak">
+    <div class="form-horizontal" id="bookPage">
+        <hr />
+        <div class="row">
+
+            <div class="col-md-9 col-lg-offset-1">
+                <div class="card horizontal">
+                    <div class="card-image">
+                        <img height="250" style="text-align:center" src="@Url.Action("GetCoverImage", "Books", routeValues: new { id = Model.Id })" class="img-rounded" />
+                    </div>
+                    <div class="card-stacked">
+                        <div class="card-content">
+                            <table class="table">
+                                <tr ng-repeat="b in books track by b.Id" ng-if="b.Id==@Model.Id" ng-cloak>
+                                    <td>
+                                        <h5>{{b.Name}}</h5>
+                                        <p>{{b.AuthorName}}</p>
+                                        <p>{{b.Year.slice(6,19) | date}}</p>
+                                        <p>{{b.GenreName}}</p>
+                                        <p>{{b.Description}}</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="card-action">
+                            <h5>
+                                Download:
+                                <text ng-repeat="l in link" ng-if="l.Id== @Model.Id" id="links" ng-cloak>
+                                    <a ng-href="@Url.Action("DownloadBook", "Books")?path={{::l.FileName}}"> {{::getType(l.FileName)}} </a>
+                                </text>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-2">
+                    <div class="card horizontal">
+                        <div class="card-stacked">
+                            <div class="card-content">
+                                <p>Lists with this book</p>
+                                <table class="table" id="similar">
+                                    <tr ng-repeat="b in similars track by b.Id" ng-if="b.Id!==@Model.Id">
+                                        <td>
+                                            <a ng-href="@Url.Action("book", "Books")?id={{::b.Id}}"><img ng-src="data:image/jpeg;base64,{{::toBase64(b.Cover)}}" width="100" class="img-rounded" /></a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="card-action">
+                                </div>
+                            </div>
+                    </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <h5 style="text-align:center">Readers Reviews</h5>
+    <div class="col-md-9 col-md-offset-1">
+        <div class="card horizontal">
+            <div class="card-stacked">
+                <div class="card-content">
+                    <div class="col-md-3">
+                        <img width="130" align="middle" style="margin: 0 auto;display: block;" src="@Url.Action("GetCoverImage", "Books", routeValues: new { id = Model.Id })" class="img-rounded" /><br />
+                        <p style="font-weight:bold;text-align:center;">@Model.Name</p>
+                        <p style="font-size:12px;text-align:center;">@Model.Author.AuthorName</p>
+                    </div>
+                    <div class="col-md-9">
+                        <div id="comment" ng-controller="commCtrl" ng-init="getCommentWall('@Model.Id')">
+                            <div ng-repeat="c in comments">
+                                <div id="commentBody">
+                                    <div id="commentBodyLine">
+                                        <text>{{c.UserName}}</text>
+                                        <text>{{c.CommentTime.slice(6,19) | date:'medium' }}</text>
+                                    </div>
+                                    <p ng-bind-html="c.CommentBody | unsafe"></p>
+                                </div>
+                                <div style="background-color:white">
+                                    <hr />
+                                </div>
+                            </div>
+
+                            <form name="Comment" ng-submit="addComment()" id="commentForm">
+                                <div>
+                                    <input name="UserName" ng-model="model.UserName" type="text" placeholder="UserName" required />
+                                </div>
+                                <div>
+                                    <input name="Email" ng-model="model.Email" type="email" placeholder="Email" required />
+                                </div>
+                                <div>
+                                    <trix-editor angular-trix ng-model="model.CommentBody" class="trix-content"></trix-editor>
+                                </div>
+                              
+                                <div><input name="Rating" hidden ng-model="model.Rating" ng-init="model = {Rating:2}" type="text" /></div>
+                                <div><input name="BookId" hidden ng-model="model.BookId" ng-init="model = {BookId:@Model.Id}" type="text" /></div><br />
+                                <div id="commentBtn"><input  type="submit" value="Add Comment" class="waves-effect waves-light btn" /></div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

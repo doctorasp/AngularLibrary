@@ -1,0 +1,59 @@
+﻿@model IEnumerable<LibraryAngular.Models.Genre>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    
+    table td, table tr {
+        border: none !important;
+    }
+
+    thead {
+        color: lightseagreen;
+    }
+
+    .card-action {
+        height: 55px;
+    }
+</style>
+
+
+<div ng-app="MyApp" ng-controller="myCtrl" ng-cloak>
+
+    <div class="row">
+        <div class="card horizontal">
+            <div class="card-stacked">
+               
+                <div class="card-content">
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+
+                                <th>
+                                    Genre
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="r in genres">
+                                <td>
+                                    {{r.GenreName}}
+                                </td>
+                                <td>
+                                    <a ng-href="@Url.Action("Edit", "Genres")?id={{r.GenreId}}"><span class="glyphicon glyphicon-edit"></span></a>
+                                    <a ng-href="#" class="" ng-confirm-click="Are you sure to delete this record ?" confirmed-click="removeGenre(r.GenreId)"><span class="glyphicon glyphicon-remove"></span></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>

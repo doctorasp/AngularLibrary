@@ -1,0 +1,91 @@
+﻿@model IEnumerable<LibraryAngular.Models.Book>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    table td, table tr{
+        border:none !important;
+    }
+
+    thead {
+        color: lightseagreen;
+    }
+    .card-action{
+        height:55px;
+    }
+</style>
+
+
+<div ng-app="MyApp" ng-controller="myCtrl" ng-cloak>
+
+    <div class="row">
+        <div class="card horizontal">
+            <div class="card-stacked">
+                <div class="card-action">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <a ng-href="@Url.Action("Create", "Books")"> Create New </a>
+                        </div>
+                        <div class="col-md-3 col-lg-offset-6">
+                            <input id="search" type="search" placeholder="Search" ng-model="search">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Cover
+                                </th>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Year
+                                </th>
+                                <th>
+                                    Author
+                                </th>
+                                <th>
+                                    Genre
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="r in books | orderBy:Id | orderBy:sortType:sortReverse| filter: search | Pagestart:(currentPage-1)*PerPageItems | limitTo:PerPageItems">
+                                <td>
+                                    <img ng-src="data:image/jpeg;base64,{{::toBase64(r.Cover)}}" width="120" class="img-thumbnail" />
+                                </td>
+                                <td>
+                                    {{::r.Name}}
+                                </td>
+                                <td>
+                                    {{::r.Year.slice(6,19) | date}}
+                                </td>
+                                <td>
+                                    {{::r.AuthorName}}
+                                </td>
+                                <td>
+                                    {{::r.GenreName}}
+                                </td>
+                                <td>
+                                    <a ng-href="@Url.Action("Edit", "Books")?id={{::r.Id}}"><span class="glyphicon glyphicon-edit"></span></a>
+                                    <a ng-href="#" class="" ng-confirm-click="Are you sure to delete this record ?" confirmed-click="removeBook(r.Id)"><span class="glyphicon glyphicon-remove"></span></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+
+    
+</div>

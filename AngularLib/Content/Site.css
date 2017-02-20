@@ -1,0 +1,167 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+img:hover {
+    filter: alpha(opacity=80);
+    opacity: .8;
+    
+}
+
+#Description {
+    margin: 0px;
+    width: 85%;
+    max-width: 100%;
+    height: 94px;
+}
+
+#Name {
+    width: 85%;
+    max-width: 100%;
+
+}
+
+#books table {
+    border-collapse: collapse;
+}
+
+
+/* remove padding */
+#books table td, th {
+    padding: 0;
+}
+
+#books p {
+    color:black;
+}
+#books text {
+    color: darkcyan;
+}
+
+#books p, text {
+    
+    padding-top: 5px;
+}
+
+#books text {
+    line-height:100%;
+}
+
+
+#books p:first-child {
+    font-size: larger;
+    color: lightseagreen;
+}
+
+.paginationclass {
+    margin: 19px 28px;
+}
+
+    .paginationclass span {
+        margin-left: 15px;
+        display: inline-block;
+    }
+
+.pagination-controle li {
+    display: inline-block;
+}
+
+.pagination-controle button {
+    font-size: 12px;
+    margin-top: -26px;
+    cursor: pointer;
+}
+
+.pagination {
+    margin: 5px 12px !important;
+}
+
+/* remove padding */
+#books table td, img th {
+    padding: 0;
+}
+
+[ng\:cloak], [ng-cloak], .ng-cloak {
+    display: none !important;
+}
+
+#books img:hover {
+    transform: scale(1.1);
+    transition: all .2s ease-in-out;
+}
+
+p a {
+    color: lightseagreen;
+    text-shadow: 0 1px 1px #fff;
+    font-size:20px;
+    font-weight:400;
+}
+
+p {
+    color: #7a7c7f;
+    font-size: 15px;
+    font-family: "Libre Baskerville", serif;
+    line-height: 20px;
+    text-shadow: 0 1px 1px #fff;
+    padding-top: 0px;
+}
+
+.collection{
+    border:none!important;
+}
+.nav-wrapper .input-field {
+    background-color: white;
+}
+
+.row {
+    padding-bottom: 30px;
+}
+
+.head h4 {
+    text-align: center;
+    padding-top: 10px;
+    font-weight: 400;
+    color: darkcyan;
+}
+
+
+#books #links a, #bookPage #links a {
+    color: darkorange;
+}
+
+#books p:first-child {
+    font-size: larger;
+    color: lightseagreen;
+}
+
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/*input,
+select,
+textarea {
+    max-width: 280px;
+}*/
+
