@@ -1,13 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using LibraryAngular.Models;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace AngularLib.Controllers
 {
     public class HomeController : Controller
     {
+        
+        private ContextBooks db;
+        public HomeController()
+        {
+            db = new ContextBooks();
+        }
+
+        
+
         public ActionResult Index()
         {
             return View();

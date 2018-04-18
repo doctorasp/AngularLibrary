@@ -14,6 +14,7 @@ app.controller("myCtrl", function ($scope, BookService) {
 
     $scope.removeBook = function (index) {
         BookService.deleteBook(index);
+        $scope.books.slice(index, 1);
         location.reload();
     };
 
@@ -39,6 +40,16 @@ app.controller("myCtrl", function ($scope, BookService) {
         }, function (b) {
             console.log(b);
         });
+    }
+
+  
+    $scope.ReadMoreReviews = function readMoreReviews() {
+            var getData = BookService.getMoreComments();
+            getData.then(function (c) {
+                $scope.rcomm = c.data;
+            }, function (c) {
+                console.log(c);
+            })
     }
 
     $scope.searchName = function (value, index) {
@@ -71,6 +82,17 @@ app.controller("myCtrl", function ($scope, BookService) {
         }, function (c) {
             console.log(c);
         })
+    }
+
+
+    $scope.getBooksByType = function getBooksByType(type) {
+        this.type = type;
+        var getData = BookService.getBooksByType($scope.type);
+        getData.then(function (b) {
+            $scope.books = b.data;
+        }, function (b) {
+            console.log(b);
+        });
     }
 
     $scope.similarBooks = function getSimilarBooks(term) {
@@ -119,7 +141,7 @@ app.controller("myCtrl", function ($scope, BookService) {
         }
 
         $scope.getType = function getType(str) {
-            return str.substring(str.length - 3);
+            return str.split('.').pop();
         }
 
         $scope.toBase64 = function _arrayBufferToBase64(buffer) {
@@ -178,6 +200,10 @@ app.service("BookService", function ($http) {
         return $http.get("/Books/GetBooksAsync");
     };
 
+    this.getBooksByType = function (type) {
+        return $http.get("Books/GetBooksByType?type=" + type);
+    };
+
     this.getFiles = function () {
         return $http.get("/Books/GetFilePath/");
     };
@@ -193,6 +219,11 @@ app.service("BookService", function ($http) {
     this.getRecentComments = function () {
         return $http.get("Comments/GetRecentComments/");
     };
+
+    this.getMoreComments = function () {
+        return $http.get("Comments/GetMoreComments/");
+    };
+
 
     this.deleteBook = function (index) {
         return $http.post('Books/Delete/' + index);

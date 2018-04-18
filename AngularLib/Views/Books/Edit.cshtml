@@ -5,14 +5,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
 @using (Html.BeginForm("Edit", "Books", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        
+
         <div class="card horizontal">
             <div class="card-stacked">
                 <div class="card-content">
@@ -69,10 +69,56 @@
                                     <input class="file-path validate" type="text" placeholder="Choose cover for book">
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
-                </div>
+
+                    
+
+                    <div class="form-group">
+                        <form action="#">
+                            <div class="col-md-6 col-md-offset-2">
+                                <div class="file-field input-field">
+
+                                    <div class="btn">
+                                        <span>File</span>
+                                        <input type="file" multiple id="files" name="files">
+                                    </div>
+
+                                    <div class="file-path-wrapper">
+                                        <input class="file-path validate" type="text" placeholder="Upload one or more files">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="control-label col-md-2">
+                            Files:
+                        </div>
+                        <div class="col-md-6">
+                            <table id="updateTable">
+
+                                @foreach (var f in Model.FilePaths)
+                                {
+                                    int index = f.FileName.LastIndexOf('/');
+                                    <tr>
+                                        <td>
+                                            <p class="alert-info">@f.FileName.Substring(index+1)</p>
+                                        </td>
+                                        <td>
+                                           
+                                            <a class="delete" href="/Books/DeleteBookFromServer?id=@f.FilePathId">Delete</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+
+                        </div>
+                     </div>
+                        
+                    </div>
                 <div class="card-action">
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
@@ -90,6 +136,7 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
                 <script>
                     $(document).ready(function () {
                         $('select').material_select();

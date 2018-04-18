@@ -1,0 +1,20 @@
+﻿@model IEnumerable<LibraryAngular.Models.Comment>
+
+<tr ng-repeat="c in rcomm track by c.Id">
+    <td width="100">
+        <div ng-repeat="b in books" ng-if="c.BookId==b.Id">
+            <p style="text-align:center"><a ng-href="@Url.Action("book", "Books")?id={{::b.Id}}"><img ng-src="data:image/jpeg;base64,{{::toBase64(b.Cover)}}" width="100" class="img-rounded" /> </a></p>
+            <p style="text-align:center">{{b.AuthorName}}</p>
+
+        </div>
+
+    </td>
+    <td width="400">
+        <p style="font-weight:bold; color:darkcyan">{{c.UserName}}</p>
+
+        <p id="CommentBody" ng-bind-html="c.CommentBody | unsafe"></p>
+        <p style="text-align:center">
+            {{c.CommentTime.slice(6,19) | date:'medium'}}
+        </p>
+    </td>
+</tr>

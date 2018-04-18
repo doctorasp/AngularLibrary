@@ -15,18 +15,22 @@ namespace AngularLib.Controllers
     public class BooksController : Controller
     {
         private ContextBooks db = new ContextBooks();
-
-
+       
         // GET: Books
         public async Task<ActionResult> Index()
         {
             return View(await db.Books.ToListAsync());
         }
 
-        private List<Author> GetOptions()
+        public List<Author> GetOptions()
         {
             return db.Authors.ToList();
 
+        }
+
+        public JsonResult Genres()
+        {
+            return Json(db.Genres, JsonRequestBehavior.AllowGet);
         }
 
         public List<Genre> GenreOptions()
@@ -100,6 +104,56 @@ namespace AngularLib.Controllers
                             ).Take(5).ToListAsync();
             return Json(await book, JsonRequestBehavior.AllowGet);
         }
+
+        public async Task<JsonResult> GetBooksByType(string type)
+        {
+            if (!String.IsNullOrEmpty(type))
+            {
+                var book = (from b in db.Books
+                            join au in db.Authors on b.AuthorId equals au.Id
+                            join a in db.FilePaths on b.Id equals a.BookID
+                            orderby b.Id
+                            join g in db.Genres on b.GenreId equals g.GenreId
+                            where a.FileName.Contains((type))
+                            orderby b.ViewCount
+                            select new
+                            {
+                                b.Id,
+                                b.Name,
+                                b.Year,
+                                b.Cover,
+                                b.ViewCount,
+                                au.AuthorName,
+                                g.GenreName
+
+                            }
+                       ).ToListAsync();
+                return Json(await book, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var book = (from b in db.Books
+                            join au in db.Authors on b.AuthorId equals au.Id
+                            orderby b.Id
+                            join g in db.Genres on b.GenreId equals g.GenreId
+                            orderby b.ViewCount
+                            select new
+                            {
+                                b.Id,
+                                b.Name,
+                                b.Year,
+                                b.Cover,
+                                b.ViewCount,
+                                au.AuthorName,
+                                g.GenreName
+
+                            }
+                      ).ToListAsync();
+                return Json(await book, JsonRequestBehavior.AllowGet);
+            }
+           
+        }
+
 
         public async Task<JsonResult> GetBooksAsync(int? page, string term)
         {
@@ -204,10 +258,10 @@ namespace AngularLib.Controllers
                         book.CoverType = file.ContentType;
                     }
                 }
-                            db.Books.Add(book);
-                            await db.SaveChangesAsync();
+                   db.Books.Add(book);
+                   await db.SaveChangesAsync();
 
-                        Directory.CreateDirectory(Server.MapPath("~/App_Data/warehouse/book_" + book.Id));
+                Directory.CreateDirectory(Server.MapPath("~/App_Data/warehouse/book_" + book.Id));
 
                 foreach (var f in files)
                 {
@@ -250,6 +304,22 @@ namespace AngularLib.Controllers
                 return File(path, System.Net.Mime.MediaTypeNames.Application.Octet, Path.GetFileName(path));
             }
 
+        public ActionResult DeleteBookFromServer(int id)
+        {
+            string FilePath = Path.Combine(Server.MapPath(db.FilePaths.Single(x => x.FilePathId == id).FileName));
+
+
+            if (System.IO.File.Exists(FilePath))
+            {
+                System.IO.File.Delete(FilePath);
+                FilePath fp = db.FilePaths.Find(id);
+                db.FilePaths.Remove(fp);
+                db.SaveChanges();
+            }
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+            
+
         // GET: Books/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
@@ -270,7 +340,7 @@ namespace AngularLib.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id, Name, Year, AuthorId, GenreId, Cover, CoverType, Description")] Book book, HttpPostedFileBase file)
+        public async Task<ActionResult> Edit([Bind(Include = "Id, Name, Year, AuthorId, GenreId, Cover, CoverType, Description")] Book book, HttpPostedFileBase file, IEnumerable<HttpPostedFileBase> files)
         {
             if (ModelState.IsValid)
             {
@@ -283,7 +353,27 @@ namespace AngularLib.Controllers
                         book.Cover = array;
                         book.CoverType = file.ContentType;
                     }
-}
+                    
+                }
+
+                foreach (var f in files)
+                {
+                    if (f != null && f.ContentLength > 0)
+                    {
+
+                        var fileName = Path.GetFileName(f.FileName);
+                        var path = Path.Combine(Server.MapPath("~/App_Data/warehouse/book_" + book.Id), fileName);
+                        f.SaveAs(path);
+
+                        FilePath fp = new FilePath()
+                        {
+                            BookID = book.Id,
+                            FileName = Globals.resolveVirtual(path)
+                        };
+                        db.FilePaths.Add(fp);
+                        db.SaveChanges();
+                    }
+                }
                 db.Entry(book).State = EntityState.Modified;
                 if (file == null)
                 {
@@ -293,7 +383,7 @@ namespace AngularLib.Controllers
                 }
                 
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return Redirect(Request.UrlReferrer.ToString());
             }
             return View(book);
         }

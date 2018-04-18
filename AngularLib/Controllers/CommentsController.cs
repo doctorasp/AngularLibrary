@@ -14,12 +14,23 @@ namespace LibraryAngular.Controllers
     public class CommentsController : Controller
     {
         private ContextBooks db = new ContextBooks();
+        public static int Counter { get; set; }
+
 
         // GET: Comments
         public async Task<ActionResult> Index()
         {
             var comments = db.Comments.Include(c => c.Book);
             return View(await comments.ToListAsync());
+        }
+
+
+        public async Task<JsonResult> GetMoreComments(int count = 3)
+        {
+            Counter += 2;
+            count = count + Counter;
+            var comments = (from c in db.Comments orderby c.CommentTime descending select c).Take(count).ToListAsync();
+            return Json(await comments, JsonRequestBehavior.AllowGet);
         }
 
 

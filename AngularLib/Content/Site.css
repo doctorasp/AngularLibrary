@@ -136,6 +136,7 @@ p {
 
 #books #links a, #bookPage #links a {
     color: darkorange;
+    font-weight:bold;
 }
 
 #books p:first-child {

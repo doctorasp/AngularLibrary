@@ -1,0 +1,11 @@
+﻿@model IEnumerable<LibraryAngular.Models.Book>
+
+@foreach (var f in Model.FilePaths)
+{
+    <tr>
+        <td>
+            @Ajax.ActionLink(f.FileName, "DeleteBookFromServer", "Books", new { id = f.FilePathId }, new AjaxOptions { UpdateTargetId = "updateTable" })
+        </td>
+        <td></td>
+    </tr>
+}
